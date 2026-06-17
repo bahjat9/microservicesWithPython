@@ -4,11 +4,14 @@ from app import repository
 from app.schemas import ActivityCreate, ActivityOut, ActivityList, GameOut
 from app.config import settings
 
+from app.infrastructure.auth_client import get_auth_headers
+
 async def validate_user(user_id: str) -> bool:
+    headers = await get_auth_headers()
     for attempt in range(3):
         try:
             async with httpx.AsyncClient(timeout=5.0) as client:
-                resp = await client.get(f"{settings.user_service_url}/v1/users/{user_id}")
+                resp = await client.get(f"{settings.user_service_url}/v1/users/{user_id}", headers=headers)
                 return resp.status_code == 200
         except httpx.RequestError:
             if attempt == 2:
@@ -42,14 +45,12 @@ async def add_activity(db: Session, data: ActivityCreate) -> ActivityOut:
     game = await fetch_game(data.game_id)
 
     game_title = game.title if game else None
-    print(f"[DEBUG] About to publish for user {activity.user_id}")
     await publish_activity_event(
         user_id=activity.user_id,
         game_id=activity.game_id,
         action=activity.action,
         game_title=game_title,
     )
-    print("[DEBUG] Publish done")
 
     result = ActivityOut.model_validate(activity)
     result.game = game

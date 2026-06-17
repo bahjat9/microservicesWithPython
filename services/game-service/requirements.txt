@@ -8,3 +8,5 @@ aiosqlite
 ruff
 mypy
 httpx
+redis
+python-jose[cryptography]==3.3.0

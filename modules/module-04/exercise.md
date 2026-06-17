@@ -6,7 +6,7 @@
 ---
 
 ## Objective
-
+  
 Until now, services communicated synchronously — one service called another and waited for a reply. This module introduces asynchronous messaging: a service drops a message into a broker and moves on, without waiting for any response.
 
 You will wire one messaging flow into the system: when an activity is logged, `activity-service` publishes a message to RabbitMQ and `notification-service` consumes it.

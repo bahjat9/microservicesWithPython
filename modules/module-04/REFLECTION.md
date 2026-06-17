@@ -1,7 +1,7 @@
 # Module 4 — Reflection
 
 **Team name**: bahjat
-**Branch**: `module-04/<bahjat9>`
+**Branch**: `module-04/bahjat9`
 **Submitted**: before Module 5 lesson
 
 ---
