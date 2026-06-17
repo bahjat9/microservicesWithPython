@@ -26,8 +26,13 @@ async def proxy(request: Request, path: str):
     full_path = f"/{path}"
 
     if full_path not in PUBLIC_PATHS:
-        auth_header = request.headers.get("Authorization", "")
-        if not auth_header.startswith("Bearer "):
+        auth_header = None
+        for key, value in request.headers.items():
+            if key.lower() == "authorization":
+                auth_header = value
+                break
+
+        if not auth_header or not auth_header.startswith("Bearer "):
             return Response(status_code=401, content="Missing token")
         token = auth_header.split(" ", 1)[1]
         try:

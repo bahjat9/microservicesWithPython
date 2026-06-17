@@ -20,3 +20,11 @@ def list_games(db: Session, limit: int = 20, offset: int = 0) -> tuple[list[Game
     total = db.query(Game).count()
     games = db.query(Game).offset(offset).limit(limit).all()
     return games, total
+
+def delete_game(db: Session, game_id: str) -> bool:
+    game = db.query(Game).filter(Game.id == game_id).first()
+    if game is None:
+        return False
+    db.delete(game)
+    db.commit()
+    return True
